@@ -10,3 +10,12 @@ for batch in dataset:
     h_true_hat = lmmse(hp_ls, 1)
     print(h_true_hat)
     break
+
+
+def main():
+    delay_profile = "A"
+    train_path = f"/opt/shared/datasets/NeoRadiumTDLdataset/train/TDL{delay_profile}"
+    test_path = f"/opt/shared/datasets/NeoRadiumTDLdataset/test/TDL{delay_profile}"
+
+if __name__ == "__main__":
+    main()
