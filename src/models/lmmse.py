@@ -67,3 +67,4 @@ class LMMSE:
         hp_ls_h_true_cross_corr = np.conj(h_true.T) @ hp_ls
         
         return hp_ls_h_true_cross_corr/ batch_size
+    
