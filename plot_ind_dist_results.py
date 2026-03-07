@@ -29,8 +29,8 @@ def load_yaml(path: Path):
 def plot_ind_dist_results(
     delay_profile: str,
     pilot_type: str,
-    lmmse_stats: str,
-    results_dir: Path,
+    lmmse_stats: str = "per_test",
+    results_dir: Path = Path("results"),
     output_path: Optional[Path] = None,
 ):
     """
@@ -43,22 +43,28 @@ def plot_ind_dist_results(
     delay_profile = delay_profile.upper()
     pilot_suffix = pilot_type.replace(" ", "")
 
-    base_dir = results_dir / "ind_dist"
+    base_dir = results_dir / "in_dist" / "numerical"
 
     # File naming convention established by evaluate_* scripts
     bilinear_file = base_dir / f"bilinear_interp_{delay_profile}_{pilot_suffix}.yaml"
-    lmmse_file = base_dir / f"lmmse_{delay_profile}_{lmmse_stats}_{pilot_suffix}.yaml"
+    lmmse_train_file = base_dir / f"lmmse_{delay_profile}_train_{pilot_suffix}.yaml"
+    lmmse_per_test_file = base_dir / f"lmmse_{delay_profile}_per_test_{pilot_suffix}.yaml"
 
     bilinear_data = load_yaml(bilinear_file)
-    lmmse_data = load_yaml(lmmse_file)
+    lmmse_train_data = load_yaml(lmmse_train_file)
+    lmmse_per_test_data = load_yaml(lmmse_per_test_file)
 
     # Keys are SNRs (0,5,10,...) → ensure sorted order
     snrs = sorted(int(s) for s in bilinear_data.keys())
 
-    # Verify both algorithms share the same SNR grid
-    snrs_lmmse = sorted(int(s) for s in lmmse_data.keys())
-    if snrs != snrs_lmmse:
-        raise ValueError(f"SNR grids differ between {bilinear_file} and {lmmse_file}")
+    # Verify all algorithms share the same SNR grid
+    snrs_lmmse_train = sorted(int(s) for s in lmmse_train_data.keys())
+    snrs_lmmse_per = sorted(int(s) for s in lmmse_per_test_data.keys())
+    if snrs != snrs_lmmse_train or snrs != snrs_lmmse_per:
+        raise ValueError(
+            f"SNR grids differ between bilinear ({bilinear_file}) and LMMSE "
+            f"({lmmse_train_file}, {lmmse_per_test_file})"
+        )
 
     fig, axes = plt.subplots(3, 3, figsize=(15, 12), sharex=True, sharey=True)
     axes = axes.reshape(-1)
@@ -72,10 +78,16 @@ def plot_ind_dist_results(
             continue
 
         y_bilin = [bilinear_data[snr][scenario]["nmse_mean_db"] for snr in snrs]
-        y_lmmse = [lmmse_data[snr][scenario]["nmse_mean_db"] for snr in snrs]
+        y_lmmse_train = [
+            lmmse_train_data[snr][scenario]["nmse_mean_db"] for snr in snrs
+        ]
+        y_lmmse_per = [
+            lmmse_per_test_data[snr][scenario]["nmse_mean_db"] for snr in snrs
+        ]
 
         ax.plot(snrs, y_bilin, marker="o", label="Bilinear interpolation")
-        ax.plot(snrs, y_lmmse, marker="s", label=f"LMMSE ({lmmse_stats})")
+        ax.plot(snrs, y_lmmse_train, marker="s", label="LMMSE (train)")
+        ax.plot(snrs, y_lmmse_per, marker="^", label="LMMSE (per_test)")
 
         ax.set_title(scenario.replace("_", " "), fontsize=9)
         ax.grid(True, linestyle="--", alpha=0.4)
@@ -89,15 +101,14 @@ def plot_ind_dist_results(
         ax.legend(loc="lower left", fontsize=7, frameon=False)
 
     fig.suptitle(
-        f"TDL-{delay_profile}, pilots={pilot_suffix}, LMMSE stats={lmmse_stats}",
+        f"TDL-{delay_profile}, pilots={pilot_suffix}",
         fontsize=12,
     )
     fig.tight_layout(rect=[0.03, 0.03, 0.97, 0.94])
 
     if output_path is None:
         output_path = (
-            results_dir
-            / f"ind_dist_plot_TDL{delay_profile}_pilots{pilot_suffix}_{lmmse_stats}.png"
+            results_dir / f"ind_dist_plot_TDL{delay_profile}_pilots{pilot_suffix}.png"
         )
     else:
         output_path = Path(output_path)
@@ -123,13 +134,6 @@ def parse_args():
         help="Pilot type suffix used in filenames: '2', '23', or '2711'.",
     )
     parser.add_argument(
-        "--lmmse_stats",
-        type=str,
-        choices=["train", "per_test"],
-        required=True,
-        help="Which LMMSE statistics configuration to load.",
-    )
-    parser.add_argument(
         "--results_dir",
         type=str,
         default="results",
@@ -149,7 +153,6 @@ if __name__ == "__main__":
     plot_ind_dist_results(
         delay_profile=args.delay_profile,
         pilot_type=args.pilot_type,
-        lmmse_stats=args.lmmse_stats,
         results_dir=Path(args.results_dir),
         output_path=Path(args.output_path) if args.output_path is not None else None,
     )
