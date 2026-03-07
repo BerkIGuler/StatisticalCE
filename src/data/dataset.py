@@ -3,6 +3,8 @@ import torch
 from torch.utils.data import Dataset
 from pathlib import Path
 import random
+import yaml
+
 
 class TDLDataset(Dataset):
     def __init__(
@@ -34,6 +36,7 @@ class TDLDataset(Dataset):
         self.SNRs = SNRs
         self.pilot_symbols = pilot_symbols
         self.pilot_every_n = pilot_every_n
+        self.noise_variance = self._get_noise_variance(SNRs)
 
         self.file_list = list(Path(data_path).glob("*.npy"))
         self.stats = self._get_stats_per_file(self.file_list)
@@ -52,10 +55,10 @@ class TDLDataset(Dataset):
         file_path = self.file_list[file_idx]
         channels = self.data[file_path]
         channel = channels[sample_idx].squeeze().T
-    
+
         SNR = random.choice(self.SNRs)
         LS_channel_at_pilots = self._get_LS_estimate_at_pilots(channel, SNR)
-        stats = self.stats[file_path]
+        stats = self.stats[file_path].copy()
         stats["SNR"] = SNR
 
         LS_channel_at_pilots_torch = torch.from_numpy(LS_channel_at_pilots).to(torch.complex64)
@@ -83,7 +86,10 @@ class TDLDataset(Dataset):
             file_parts = file_name.split("_")
 
             if file_parts[0] == "delay":
-                delay_spread = int(file_parts[2])  # [delay, spread, y, doppler, x]
+                try:
+                    delay_spread = int(file_parts[2])  # [delay, spread, x, doppler, y] or [delay, x, doppler, y]
+                except ValueError:
+                    delay_spread = int(file_parts[1])  # [delay, x, doppler, y]
                 doppler_shift = int(file_parts[-1])
             elif file_parts[0] == "doppler":
                 doppler_shift = int(file_parts[1])  # [doppler, x, delay, spread, y]
@@ -97,6 +103,13 @@ class TDLDataset(Dataset):
                 raise ValueError(f"File {file_path} already in stats, but should not be")
             
         return stats
+    
+    def _get_noise_variance(self, SNRs):
+        noise_variances = []
+        for SNR in SNRs:
+            noise_variance = 1 / (10**(SNR / 10))
+            noise_variances.append(noise_variance)
+        return np.mean(np.array(noise_variances))
     
     def _get_LS_estimate_at_pilots(self, channel_matrix, SNR):
         # unit symbol power and unit channel power --> rx noise var = LS error var
@@ -126,3 +139,21 @@ class TDLDataset(Dataset):
         pilot_mask_subcarrier_indices = np.arange(0, self.num_subcarriers, self.pilot_every_n)
         pilot_mask[np.ix_(pilot_mask_subcarrier_indices, self.pilot_symbols)] = 1
         return pilot_mask
+
+def get_in_distribution_test_datasets(test_path, return_pilots_only=True, SNRs=[20], pilot_symbols=[2]):
+    folder_list = list(Path(test_path).glob("*"))
+    for folder in folder_list:
+        if folder.is_dir():
+            folder_metadata_path = folder / "metadata.yaml"
+            with open(folder_metadata_path, "r") as f:
+                folder_metadata = yaml.safe_load(f)
+            file_size = folder_metadata["num_channels_per_config"]
+            dataset = TDLDataset(
+                data_path=folder,
+                file_size=file_size,
+                normalization_stats=None,
+                return_pilots_only=return_pilots_only,
+                SNRs=SNRs,
+                pilot_symbols=pilot_symbols
+                )
+            yield folder.name, dataset

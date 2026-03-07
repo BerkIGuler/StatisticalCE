@@ -13,8 +13,8 @@ class LMMSE:
         self.num_subcarriers = num_subcarriers
         self.num_symbols = num_symbols
     
-    def __call__(self, hp_ls, sigma):
-        sigma2_eye = np.eye(self.pilot_autocorr.shape[0]) * sigma
+    def __call__(self, hp_ls, sigma2):
+        sigma2_eye = np.eye(self.pilot_autocorr.shape[0]) * sigma2
         pilot_autocorr_inv = np.linalg.inv(self.pilot_autocorr + sigma2_eye)
         h_true_hat = self.channel_pilot_crosscorr @ pilot_autocorr_inv @ hp_ls
         return h_true_hat
@@ -29,8 +29,8 @@ class LMMSE:
             hp_ls, h_true, _ = batch
             hp_ls = hp_ls.numpy()
             h_true = h_true.numpy()
-            pilot_autocorr += self._compute_autocorrelation(hp_ls)
-            channel_pilot_crosscorr += self._compute_cross_correlation(hp_ls, h_true)
+            self.pilot_autocorr += self._compute_autocorrelation(hp_ls)
+            self.channel_pilot_crosscorr += self._compute_cross_correlation(hp_ls, h_true)
 
         self.pilot_autocorr /= len(dataloader)
         self.channel_pilot_crosscorr /= len(dataloader)
@@ -38,23 +38,23 @@ class LMMSE:
     @staticmethod
     def _compute_autocorrelation(hp_ls):
         if hp_ls.ndim == 2:
-            hp_ls = hp_ls.unsqueeze(0)  # add batch dimension
+            hp_ls = np.expand_dims(hp_ls, 0)
         assert hp_ls.ndim == 3
 
         batch_size = hp_ls.shape[0]
 
         hp_ls = hp_ls.reshape(batch_size, -1)  # row-major flatten
 
-        hp_ls_autocorr = np.conj(hp_ls.T) @ hp_ls
+        hp_ls_autocorr = hp_ls.T @ np.conj(hp_ls)
         return hp_ls_autocorr / batch_size
 
     @staticmethod
     def _compute_cross_correlation(hp_ls, h_true):
         if hp_ls.ndim == 2:
-            hp_ls = hp_ls.unsqueeze(0)  # add batch dimension
+            hp_ls = np.expand_dims(hp_ls, 0)
         
         if h_true.ndim == 2:
-            h_true = h_true.unsqueeze(0)  # add batch dimension
+            h_true = np.expand_dims(h_true, 0)
         
         batch_size = hp_ls.shape[0]
 
@@ -64,7 +64,7 @@ class LMMSE:
         hp_ls = hp_ls.reshape(batch_size, -1)  # row-major flatten
         h_true = h_true.reshape(batch_size, -1)  # row-major flatten
 
-        hp_ls_h_true_cross_corr = np.conj(h_true.T) @ hp_ls
+        hp_ls_h_true_cross_corr = h_true.T @ np.conj(hp_ls)
         
         return hp_ls_h_true_cross_corr/ batch_size
     
