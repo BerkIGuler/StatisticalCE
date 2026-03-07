@@ -4,7 +4,7 @@
 
 DELAY_PROFILES=("A" "B" "C" "D" "E")
 # Pilot symbol options: [2], [2,3], [2,7,11]
-PILOT_OPTS=("2" "2 3" "2 7 11")
+PILOT_OPTS=("2 3")
 SAVE_DIR="${SAVE_DIR:-results}"
 EVAL_SNRs="0 5 10 15 20 25 30"
 

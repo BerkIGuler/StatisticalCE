@@ -24,13 +24,24 @@ class BilinearInterpolation:
 
         # Time: nearest-neighbour or piecewise linear interpolation / extrapolation
         if len(pilot_syms) == 1:
+            # Single pilot symbol: repeat it across all time indices
             hp_ls[:] = hp_ls[:, pilot_syms[0]:pilot_syms[0] + 1]
         elif len(pilot_syms) == 2:
             p0, p1 = int(pilot_syms[0]), int(pilot_syms[1])
-            slope = (hp_ls[:, p1] - hp_ls[:, p0]) / (p1 - p0)
-            for i in range(hp_ls.shape[1]):
-                if i not in (p0, p1):
-                    hp_ls[:, i] = hp_ls[:, p0] + slope * (i - p0)
+            if p1 - p0 == 1:
+                # Adjacent pilots (e.g. [2,3]): use robust nearest-neighbour in time
+                mid = (p0 + p1) / 2.0
+                for i in range(hp_ls.shape[1]):
+                    if i <= mid:
+                        hp_ls[:, i] = hp_ls[:, p0]
+                    else:
+                        hp_ls[:, i] = hp_ls[:, p1]
+            else:
+                # Non-adjacent pilots: linear interpolation / extrapolation
+                slope = (hp_ls[:, p1] - hp_ls[:, p0]) / (p1 - p0)
+                for i in range(hp_ls.shape[1]):
+                    if i not in (p0, p1):
+                        hp_ls[:, i] = hp_ls[:, p0] + slope * (i - p0)
         elif len(pilot_syms) == 3:
             p0, p1, p2 = int(pilot_syms[0]), int(pilot_syms[1]), int(pilot_syms[2])
             slope_1 = (hp_ls[:, p1] - hp_ls[:, p0]) / (p1 - p0)
