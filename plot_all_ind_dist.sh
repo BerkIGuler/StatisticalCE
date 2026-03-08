@@ -2,11 +2,14 @@
 
 # Generate 3x3 NMSE vs SNR figures for all configurations
 # 5 delay profiles × 3 pilot types = 15 figures
+# Usage: ./plot_all_ind_dist.sh [db|linear]   (default: db)
 
 DELAY_PROFILES=("A" "B" "C" "D" "E")
 # Pilot type suffixes used in filenames: '2', '23', '2711'
 PILOT_TYPES=("2" "23" "2711")
 
+# Metric: db (NMSE in dB) or linear (NMSE linear). First arg or METRIC env, default db.
+METRIC="${1:-${METRIC:-db}}"
 # Base results directory (where 'ind_dist' subfolder lives)
 RESULTS_DIR="${RESULTS_DIR:-results}"
 
@@ -17,15 +20,16 @@ for profile in "${DELAY_PROFILES[@]}"; do
   for pilot in "${PILOT_TYPES[@]}"; do
       RUN=$((RUN + 1))
       echo "===================================================="
-      echo "Figure ${RUN}/${TOTAL} | TDL-${profile} | pilots=${pilot}"
+      echo "Figure ${RUN}/${TOTAL} | TDL-${profile} | pilots=${pilot} | metric=${METRIC}"
       echo "===================================================="
 
-      OUT_PATH="${RESULTS_DIR}/figs/ind_dist_TDL${profile}_pilots${pilot}.png"
+      OUT_PATH="${RESULTS_DIR}/figs/ind_dist_TDL${profile}_pilots${pilot}_${METRIC}.png"
 
       python plot_ind_dist_results.py \
         --delay_profile "${profile}" \
         --pilot_type "${pilot}" \
         --results_dir "${RESULTS_DIR}" \
+        --metric "${METRIC}" \
         --output_path "${OUT_PATH}"
   done
 done

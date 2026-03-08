@@ -5,7 +5,7 @@
 DELAY_PROFILES=("A" "B" "C" "D" "E")
 # Pilot symbol options: [2], [2,3], [2,7,11]
 PILOT_OPTS=("2" "2 3" "2 7 11")
-LMMSE_STATS_OPTS=("train" "per_test")
+LMMSE_STATS_OPTS=("all_test")
 SAVE_DIR="${SAVE_DIR:-results}"
 EVAL_SNRs="0 5 10 15 20 25 30"
 

@@ -14,8 +14,8 @@ def main():
     parser.add_argument("--eval_SNRs", nargs="+", type=int, default=[0, 5, 10, 15, 20, 25, 30])
     parser.add_argument("--pilot_symbols", nargs="+", type=int, default=[2])
     parser.add_argument("--save_dir", type=str, default="results")
-    parser.add_argument("--lmmse_stats", type=str, default="train", choices=["train", "per_test"],
-                        help="'train': fit LMMSE on training data (averaged stats). "
+    parser.add_argument("--lmmse_stats", type=str, default="all_test", choices=["all_test", "per_test"],
+                        help="'all_test': fit LMMSE on the entire test set (all scenarios merged). "
                              "'per_test': fit LMMSE per test scenario (matched stats).")
     args = parser.parse_args()
 
@@ -30,29 +30,28 @@ def main():
     test_path = f"/opt/shared/datasets/NeoRadiumTDLdataset/test/TDL{args.delay_profile}"
     Path(args.save_dir).mkdir(parents=True, exist_ok=True)
 
-    if args.lmmse_stats == "train":
-        with open(f"{train_path}/metadata.yaml", "r") as f:
-            train_metadata = yaml.safe_load(f)
-        train_file_size = train_metadata["config"]["num_channels_per_config"]
-
-        print(f"Loading training data from {train_path}...")
-        train_dataset = TDLDataset(
-            data_path=train_path,
-            file_size=train_file_size,
+    if args.lmmse_stats == "all_test":
+        # Fit LMMSE statistics on the entire test set (all scenarios merged).
+        # TDLDataset will recursively collect all .npy files under test_path and
+        # infer per-file sizes from the data.
+        print(f"Loading all test data from {test_path} for LMMSE stats...")
+        fit_dataset = TDLDataset(
+            data_path=test_path,
+            file_size=None,
             return_pilots_only=True,
             SNRs=[100],
             pilot_symbols=args.pilot_symbols,
         )
-        print(f"Training dataset loaded: {len(train_dataset)} samples")
-        train_dataloader = DataLoader(train_dataset, batch_size=512, shuffle=False)
+        print(f"Full-test dataset loaded: {len(fit_dataset)} samples")
+        fit_dataloader = DataLoader(fit_dataset, batch_size=512, shuffle=False)
         model = LMMSE(
-            num_pilot_subcarriers=train_dataset.num_pilot_subcarriers,
-            num_pilot_symbols=train_dataset.num_pilot_symbols,
-            num_subcarriers=train_dataset.num_subcarriers,
-            num_symbols=train_dataset.num_symbols,
+            num_pilot_subcarriers=fit_dataset.num_pilot_subcarriers,
+            num_pilot_symbols=fit_dataset.num_pilot_symbols,
+            num_subcarriers=fit_dataset.num_subcarriers,
+            num_symbols=fit_dataset.num_symbols,
         )
-        print("Fitting LMMSE statistics on training data...")
-        model.fit(train_dataloader)
+        print("Fitting LMMSE statistics on full test set...")
+        model.fit(fit_dataloader)
         print("LMMSE fitting complete.")
 
     print(f"\nStarting evaluation on test data from {test_path}")

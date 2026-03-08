@@ -1,0 +1,196 @@
+0:
+  high_delay_high_mobility:
+    nmse_mean_db: -4.2018531971520625
+    nmse_mean_linear: 0.3800271986337326
+  high_delay_low_mobility:
+    nmse_mean_db: -6.764943031422837
+    nmse_mean_linear: 0.21062295272751333
+  high_delay_moderate_mobility:
+    nmse_mean_db: -6.96163335306749
+    nmse_mean_linear: 0.20129670437760994
+  low_delay_high_mobility:
+    nmse_mean_db: -4.1389253341572125
+    nmse_mean_linear: 0.38557375645626485
+  low_delay_low_mobility:
+    nmse_mean_db: -7.144243084147783
+    nmse_mean_linear: 0.19300816937051193
+  low_delay_moderate_mobility:
+    nmse_mean_db: -7.075599858817937
+    nmse_mean_linear: 0.19608303217942402
+  moderate_delay_high_mobility:
+    nmse_mean_db: -4.26006450841228
+    nmse_mean_linear: 0.3749674325837942
+  moderate_delay_low_mobility:
+    nmse_mean_db: -6.895256951449528
+    nmse_mean_linear: 0.20439690004721192
+  moderate_delay_moderate_mobility:
+    nmse_mean_db: -7.086992191801001
+    nmse_mean_linear: 0.1955693448175347
+5:
+  high_delay_high_mobility:
+    nmse_mean_db: -4.4133261810614
+    nmse_mean_linear: 0.3619656694224222
+  high_delay_low_mobility:
+    nmse_mean_db: -7.413206252102016
+    nmse_mean_linear: 0.18141758224216661
+  high_delay_moderate_mobility:
+    nmse_mean_db: -7.501034463438455
+    nmse_mean_linear: 0.17778558849792236
+  low_delay_high_mobility:
+    nmse_mean_db: -4.291691817519535
+    nmse_mean_linear: 0.3722466673140932
+  low_delay_low_mobility:
+    nmse_mean_db: -7.706460891221161
+    nmse_mean_linear: 0.1695719095853838
+  low_delay_moderate_mobility:
+    nmse_mean_db: -7.549685867434502
+    nmse_mean_linear: 0.17580507721543037
+  moderate_delay_high_mobility:
+    nmse_mean_db: -4.44838207019075
+    nmse_mean_linear: 0.35905567308849184
+  moderate_delay_low_mobility:
+    nmse_mean_db: -7.552073045143142
+    nmse_mean_linear: 0.17570846934721218
+  moderate_delay_moderate_mobility:
+    nmse_mean_db: -7.619533560631661
+    nmse_mean_linear: 0.17300021542951344
+10:
+  high_delay_high_mobility:
+    nmse_mean_db: -4.527176371825754
+    nmse_mean_linear: 0.3526000445355979
+  high_delay_low_mobility:
+    nmse_mean_db: -7.862410498595649
+    nmse_mean_linear: 0.1635908278442895
+  high_delay_moderate_mobility:
+    nmse_mean_db: -7.870983154824019
+    nmse_mean_linear: 0.16326822998214616
+  low_delay_high_mobility:
+    nmse_mean_db: -4.375844470652012
+    nmse_mean_linear: 0.3651031273074444
+  low_delay_low_mobility:
+    nmse_mean_db: -8.02763262726111
+    nmse_mean_linear: 0.15748410885643838
+  low_delay_moderate_mobility:
+    nmse_mean_db: -7.822369854182422
+    nmse_mean_linear: 0.16510606031201192
+  moderate_delay_high_mobility:
+    nmse_mean_db: -4.55349127629881
+    nmse_mean_linear: 0.3504700192035495
+  moderate_delay_low_mobility:
+    nmse_mean_db: -7.959087498265756
+    nmse_mean_linear: 0.15998941491241078
+  moderate_delay_moderate_mobility:
+    nmse_mean_db: -7.938265470342305
+    nmse_mean_linear: 0.16075831778034116
+15:
+  high_delay_high_mobility:
+    nmse_mean_db: -4.597748186662435
+    nmse_mean_linear: 0.34691667984264146
+  high_delay_low_mobility:
+    nmse_mean_db: -8.173021467560416
+    nmse_mean_linear: 0.15229928106779964
+  high_delay_moderate_mobility:
+    nmse_mean_db: -8.098129354671281
+    nmse_mean_linear: 0.1549483887496493
+  low_delay_high_mobility:
+    nmse_mean_db: -4.426464105774332
+    nmse_mean_linear: 0.36087233478056374
+  low_delay_low_mobility:
+    nmse_mean_db: -8.197900457393475
+    nmse_mean_linear: 0.15142931376762384
+  low_delay_moderate_mobility:
+    nmse_mean_db: -7.962045178865825
+    nmse_mean_linear: 0.1598804942344278
+  moderate_delay_high_mobility:
+    nmse_mean_db: -4.621363630331254
+    nmse_mean_linear: 0.34503538553214086
+  moderate_delay_low_mobility:
+    nmse_mean_db: -8.220264804217392
+    nmse_mean_linear: 0.15065152059953063
+  moderate_delay_moderate_mobility:
+    nmse_mean_db: -8.136723352979118
+    nmse_mean_linear: 0.15357752511527162
+20:
+  high_delay_high_mobility:
+    nmse_mean_db: -4.637931872837141
+    nmse_mean_linear: 0.34372159048735657
+  high_delay_low_mobility:
+    nmse_mean_db: -8.362375314601811
+    nmse_mean_linear: 0.1458016599811197
+  high_delay_moderate_mobility:
+    nmse_mean_db: -8.236254901041827
+    nmse_mean_linear: 0.15009786328450767
+  low_delay_high_mobility:
+    nmse_mean_db: -4.4491983154896095
+    nmse_mean_linear: 0.3589881958403244
+  low_delay_low_mobility:
+    nmse_mean_db: -8.278700907508409
+    nmse_mean_linear: 0.14863801923924738
+  low_delay_moderate_mobility:
+    nmse_mean_db: -8.050888511327708
+    nmse_mean_linear: 0.1566430565533336
+  moderate_delay_high_mobility:
+    nmse_mean_db: -4.658214603508756
+    nmse_mean_linear: 0.34212006009985385
+  moderate_delay_low_mobility:
+    nmse_mean_db: -8.3713170025841
+    nmse_mean_linear: 0.14550177780011062
+  moderate_delay_moderate_mobility:
+    nmse_mean_db: -8.259150302840128
+    nmse_mean_linear: 0.1493086503380447
+25:
+  high_delay_high_mobility:
+    nmse_mean_db: -4.660651027423711
+    nmse_mean_linear: 0.3419281820629544
+  high_delay_low_mobility:
+    nmse_mean_db: -8.460578695143294
+    nmse_mean_linear: 0.14254176447857544
+  high_delay_moderate_mobility:
+    nmse_mean_db: -8.304569124345571
+    nmse_mean_linear: 0.14775530664739597
+  low_delay_high_mobility:
+    nmse_mean_db: -4.467051721351574
+    nmse_mean_linear: 0.35751546096747433
+  low_delay_low_mobility:
+    nmse_mean_db: -8.327232774940414
+    nmse_mean_linear: 0.14698625421061806
+  low_delay_moderate_mobility:
+    nmse_mean_db: -8.094247443439574
+    nmse_mean_linear: 0.15508695021365207
+  moderate_delay_high_mobility:
+    nmse_mean_db: -4.6792969387383945
+    nmse_mean_linear: 0.3404633014268511
+  moderate_delay_low_mobility:
+    nmse_mean_db: -8.440497063683676
+    nmse_mean_linear: 0.14320239902474793
+  moderate_delay_moderate_mobility:
+    nmse_mean_db: -8.314906737586737
+    nmse_mean_linear: 0.1474040194857405
+30:
+  high_delay_high_mobility:
+    nmse_mean_db: -4.66695136925828
+    nmse_mean_linear: 0.34143250397554226
+  high_delay_low_mobility:
+    nmse_mean_db: -8.503124290997988
+    nmse_mean_linear: 0.14115217381847045
+  high_delay_moderate_mobility:
+    nmse_mean_db: -8.335218175648393
+    nmse_mean_linear: 0.1467162379513968
+  low_delay_high_mobility:
+    nmse_mean_db: -4.475889490793784
+    nmse_mean_linear: 0.35678866690511674
+  low_delay_low_mobility:
+    nmse_mean_db: -8.347845478494886
+    nmse_mean_linear: 0.14629027359944075
+  low_delay_moderate_mobility:
+    nmse_mean_db: -8.113585723369855
+    nmse_mean_linear: 0.15439791370808717
+  moderate_delay_high_mobility:
+    nmse_mean_db: -4.687277373601445
+    nmse_mean_linear: 0.3398382531080548
+  moderate_delay_low_mobility:
+    nmse_mean_db: -8.467773618647582
+    nmse_mean_linear: 0.14230581213048749
+  moderate_delay_moderate_mobility:
+    nmse_mean_db: -8.336351022909405
+    nmse_mean_linear: 0.14667797234597266
